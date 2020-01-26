@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
-* Студент: [Илья Зверев](https://up.htmlacademy.ru/javascript/19/user/1161651).
-* Наставник: `Неизвестно`.
+- Студент: [Илья Зверев](https://up.htmlacademy.ru/javascript/19/user/1161651).
+- Наставник: [Магомед Кандаев](https://htmlacademy.ru/profile/magomedkandaev).
 
 ---
 
