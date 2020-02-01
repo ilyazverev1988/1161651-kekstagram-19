@@ -1,5 +1,5 @@
 'use strict';
-var NUMBER = 25;
+var NUMBER_OF_PHOTO = 25;
 var messages = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -29,77 +29,69 @@ var getRandomElement = function (array) {
   return array[random];
 };
 
-var getFromArray = function (array) {
-  getRandomElement(array);
-};
-
-var getComments = function (number) {
-  var arrayComments = [];
+var createComments = function (number) {
+  var comments = [];
   for (var i = 0; i < number; i++) {
     var comment = {
       avatar: 'img/avatar-' + getRandomNumber(1, 6) + '.svg',
-      message: getFromArray(messages),
-      name: getFromArray(names)
+      message: getRandomElement(messages),
+      name: getRandomElement(names)
     };
-    arrayComments.push(comment);
+    comments.push(comment);
   }
-  return arrayComments;
+  return comments;
 };
 
 var getRandomNotRepeat = function (min, max) {
-  var totalNumbers = max - min + 1;
-  var arrayTotalNumbers = [];
-  var arrayRandomNumbers = [];
-  var tempRandomNumber;
+  var numbers = Array(max - min + 1)
+    .fill('')
+    .map(function (el, i) {
+      return i + min;
+    });
 
-  while (totalNumbers--) {
-    arrayTotalNumbers.push(totalNumbers + min);
-  }
-
-  while (arrayTotalNumbers.length) {
-    tempRandomNumber = Math.round(
-        Math.random() * (arrayTotalNumbers.length - 1)
-    );
-    arrayRandomNumbers.push(arrayTotalNumbers[tempRandomNumber]);
-    arrayTotalNumbers.splice(tempRandomNumber, 1);
-  }
-
-  return arrayRandomNumbers;
+  var mixNumbers = function (array) {
+    return array.sort(function () {
+      return 0.5 - Math.random();
+    });
+  };
+  return mixNumbers(numbers);
 };
 
-var getTestData = function (number) {
-  var arrayUsers = [];
-  var arrayRandomNumbers = getRandomNotRepeat(1, number);
-  arrayRandomNumbers.forEach(function (random) {
-    for (var i = 0; i < number; i++) {
-      var elementDataComment = {
-        url: 'photos/' + random + '.jpg',
-        description: 'строка — описание фотографии',
-        likes: getRandomNumber(15, 200),
-        comments: getComments(getRandomNumber(1, 3))
-      };
-    }
-    arrayUsers.push(elementDataComment);
+var generatePicture = function (number) {
+  var users = [];
+  var randomNumber = getRandomNotRepeat(1, number);
+  randomNumber.forEach(function (random) {
+    var elementDataComment = {
+      url: 'photos/' + random + '.jpg',
+      description: 'строка — описание фотографии',
+      likes: getRandomNumber(15, 200),
+      comments: createComments(getRandomNumber(1, 3))
+    };
+    users.push(elementDataComment);
   });
-  return arrayUsers;
+  return users;
 };
 
-var testData = getTestData(NUMBER);
-var createComment = function (object) {
+var photoCreate = generatePicture(NUMBER_OF_PHOTO);
+var createBlock = function (block) {
   var pictureTemplate = document
-    .querySelector('#picture')
-    .content.querySelector('.picture');
+      .querySelector('#picture')
+      .content.querySelector('.picture');
   var pictureElement = pictureTemplate.cloneNode(true);
-  pictureElement.querySelector('.picture__img').src = object.url;
-  pictureElement.querySelector('.picture__likes').textContent = object.likes;
+  pictureElement.querySelector('.picture__img').src = block.url;
+  pictureElement.querySelector('.picture__likes').textContent = block.likes;
   pictureElement.querySelector('.picture__comments').textContent =
-    object.comments.length;
+    block.comments.length;
   return pictureElement;
 };
 
-var fragment = document.createDocumentFragment();
-testData.forEach(function (data) {
-  fragment.appendChild(createComment(data));
-});
+var showPhoto = function () {
+  var fragment = document.createDocumentFragment();
+  photoCreate.forEach(function (data) {
+    fragment.appendChild(createBlock(data));
+  });
 
-picture.appendChild(fragment);
+  picture.appendChild(fragment);
+};
+
+showPhoto();
