@@ -1,5 +1,5 @@
 'use strict';
-var NUMBER_OF_PHOTO = 25;
+var NUMBER_OF_PHOTOS = 25;
 var messages = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -19,6 +19,16 @@ var names = [
   'Вашингтон'
 ];
 var picture = document.querySelector('.pictures');
+
+var mixData = function (array) {
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
+};
 
 var getRandomNumber = function (min, max) {
   return min + Math.floor(Math.random() * (max - min + 1));
@@ -49,18 +59,13 @@ var getRandomNotRepeat = function (min, max) {
       return i + min;
     });
 
-  var mixNumbers = function (array) {
-    return array.sort(function () {
-      return 0.5 - Math.random();
-    });
-  };
-  return mixNumbers(numbers);
+  return mixData(numbers);
 };
 
-var generatePicture = function (number) {
+var generateBlock = function (number) {
   var users = [];
-  var randomNumber = getRandomNotRepeat(1, number);
-  randomNumber.forEach(function (random) {
+  var randomNumbers = getRandomNotRepeat(1, number);
+  randomNumbers.forEach(function (random) {
     var elementDataComment = {
       url: 'photos/' + random + '.jpg',
       description: 'строка — описание фотографии',
@@ -72,8 +77,7 @@ var generatePicture = function (number) {
   return users;
 };
 
-var photoCreate = generatePicture(NUMBER_OF_PHOTO);
-var createBlock = function (block) {
+var createBlockPhotos = function (block) {
   var pictureTemplate = document
       .querySelector('#picture')
       .content.querySelector('.picture');
@@ -81,17 +85,63 @@ var createBlock = function (block) {
   pictureElement.querySelector('.picture__img').src = block.url;
   pictureElement.querySelector('.picture__likes').textContent = block.likes;
   pictureElement.querySelector('.picture__comments').textContent =
-    block.comments.length;
+      block.comments.length;
   return pictureElement;
 };
 
-var showPhoto = function () {
+var renderPhotos = function (photos) {
   var fragment = document.createDocumentFragment();
-  photoCreate.forEach(function (data) {
-    fragment.appendChild(createBlock(data));
+  blocksPhotos.forEach(function (data) {
+    fragment.appendChild(photos(data));
   });
 
   picture.appendChild(fragment);
 };
 
-showPhoto();
+var blocksPhotos = generateBlock(NUMBER_OF_PHOTOS);
+renderPhotos(createBlockPhotos);
+
+// ---------
+/* var ESC_KEY = 'Escape';
+var uploadFile = document.querySelector('#upload-file');
+var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+var uploadCancel = imgUploadOverlay.querySelector('#upload-cancel');
+
+var effectLevelPin = document.querySelector('.effect-level__pin');
+var effectLevelLine = document.querySelector('.effect-level__line');
+
+var onPopupEscPress = function (evt) {
+  if (evt.key === ESC_KEY) {
+    closePopup();
+  }
+};
+
+var closePopup = function () {
+  imgUploadOverlay.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+  uploadFile.value = '';
+};
+
+uploadCancel.addEventListener('click', function () {
+  closePopup();
+});
+
+uploadFile.addEventListener('change', function () {
+  document.addEventListener('keydown', onPopupEscPress);
+  imgUploadOverlay.classList.remove('hidden');
+});
+
+var onPinPressMouse = function (evt) {
+  var coordinat = evt.clientX;
+  return coordinat;
+};
+
+var a = effectLevelPin.addEventListener('mouseup', onPinPressMouse);
+
+var createHashTag = function (object) {
+  var tags = object.textContent.split('#');
+  return tags;
+};
+
+var textHashtags = document.querySelector('.text__hashtags');
+  console.log(createHashTag(textHashtags));*/
