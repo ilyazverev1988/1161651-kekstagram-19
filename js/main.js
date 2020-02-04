@@ -1,4 +1,5 @@
 'use strict';
+// Объявление переменных и констант
 var NUMBER_OF_PHOTOS = 25;
 var messages = [
   'Всё отлично!',
@@ -20,25 +21,30 @@ var names = [
 ];
 var picture = document.querySelector('.pictures');
 
+// перемешивание массива
 var mixData = function (array) {
-  for (var i = array.length - 1; i > 0; i--) {
+  var dataForMix = array;
+  for (var i = dataForMix.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
-    var temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
+    var temp = dataForMix[i];
+    dataForMix[i] = dataForMix[j];
+    dataForMix[j] = temp;
   }
-  return array;
+  return dataForMix;
 };
 
+// Получение случайного числа в диапазоне
 var getRandomNumber = function (min, max) {
   return min + Math.floor(Math.random() * (max - min + 1));
 };
 
+// получение случайного элемента массива
 var getRandomElement = function (array) {
   var random = Math.floor(Math.random() * array.length);
   return array[random];
 };
 
+// получение списка комментариев
 var createComments = function (number) {
   var comments = [];
   for (var i = 0; i < number; i++) {
@@ -52,6 +58,7 @@ var createComments = function (number) {
   return comments;
 };
 
+// получение массива чисел из диапазона не повторяющихся
 var getRandomNotRepeat = function (min, max) {
   var numbers = Array(max - min + 1)
     .fill('')
@@ -62,7 +69,8 @@ var getRandomNotRepeat = function (min, max) {
   return mixData(numbers);
 };
 
-var generateBlock = function (number) {
+// получение описания изображения
+var createDataforBlockPhoto = function (number) {
   var users = [];
   var randomNumbers = getRandomNotRepeat(1, number);
   randomNumbers.forEach(function (random) {
@@ -77,7 +85,8 @@ var generateBlock = function (number) {
   return users;
 };
 
-var createBlockPhotos = function (block) {
+// создание изображения
+var renderPhoto = function (block) {
   var pictureTemplate = document
       .querySelector('#picture')
       .content.querySelector('.picture');
@@ -89,59 +98,14 @@ var createBlockPhotos = function (block) {
   return pictureElement;
 };
 
+// отрисовка изображений на странице
 var renderPhotos = function (photos) {
   var fragment = document.createDocumentFragment();
-  blocksPhotos.forEach(function (data) {
-    fragment.appendChild(photos(data));
+  photos.forEach(function (item) {
+    fragment.appendChild(renderPhoto(item));
   });
-
   picture.appendChild(fragment);
 };
 
-var blocksPhotos = generateBlock(NUMBER_OF_PHOTOS);
-renderPhotos(createBlockPhotos);
-
-// ---------
-/* var ESC_KEY = 'Escape';
-var uploadFile = document.querySelector('#upload-file');
-var imgUploadOverlay = document.querySelector('.img-upload__overlay');
-var uploadCancel = imgUploadOverlay.querySelector('#upload-cancel');
-
-var effectLevelPin = document.querySelector('.effect-level__pin');
-var effectLevelLine = document.querySelector('.effect-level__line');
-
-var onPopupEscPress = function (evt) {
-  if (evt.key === ESC_KEY) {
-    closePopup();
-  }
-};
-
-var closePopup = function () {
-  imgUploadOverlay.classList.add('hidden');
-  document.removeEventListener('keydown', onPopupEscPress);
-  uploadFile.value = '';
-};
-
-uploadCancel.addEventListener('click', function () {
-  closePopup();
-});
-
-uploadFile.addEventListener('change', function () {
-  document.addEventListener('keydown', onPopupEscPress);
-  imgUploadOverlay.classList.remove('hidden');
-});
-
-var onPinPressMouse = function (evt) {
-  var coordinat = evt.clientX;
-  return coordinat;
-};
-
-var a = effectLevelPin.addEventListener('mouseup', onPinPressMouse);
-
-var createHashTag = function (object) {
-  var tags = object.textContent.split('#');
-  return tags;
-};
-
-var textHashtags = document.querySelector('.text__hashtags');
-  console.log(createHashTag(textHashtags));*/
+var blocksPhotos = createDataforBlockPhoto(NUMBER_OF_PHOTOS);
+renderPhotos(blocksPhotos);
