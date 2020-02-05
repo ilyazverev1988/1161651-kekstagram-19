@@ -124,7 +124,7 @@ var showBigPicture = function (image) {
   likesBigPicture.textContent = image.likes;
   quantityCommentsBigPicture.textContent = image.comments.length;
   descriptionBigPicture.textContent = image.description;
-  renderComments(image);
+  renderComments(image.comments);
   bigPicture.querySelector('.social__comment-count').classList.add('hidden');
   bigPicture.querySelector('.comments-loader').classList.add('hidden');
   document.body.classList.add('modal-open');
@@ -140,26 +140,14 @@ var renderComment = function (block) {
   return commentElement;
 };
 
-// удаление существующих комментариев
-var deleteExistingComments = function () {
-  var comments = bigPicture.querySelectorAll('.social__text');
-  var avatars = bigPicture.querySelectorAll('.social__picture');
-  comments.forEach(function (item) {
-    item.remove();
-  });
-  avatars.forEach(function (item) {
-    item.remove();
-  });
-};
-
 // отрисовка комментариев на большой картинке
 var renderComments = function (commentsItem) {
   var listCommentsBigPicture = bigPicture.querySelector('.social__comments');
   var fragment = document.createDocumentFragment();
-  commentsItem.comments.forEach(function (item) {
+  commentsItem.forEach(function (item) {
     fragment.appendChild(renderComment(item));
   });
-  deleteExistingComments();
+  listCommentsBigPicture.innerHTML = '';
   listCommentsBigPicture.appendChild(fragment);
 };
 
