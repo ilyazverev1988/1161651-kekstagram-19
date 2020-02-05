@@ -141,10 +141,10 @@ var renderComment = function (block) {
 };
 
 // отрисовка комментариев на большой картинке
-var renderComments = function (commentsItem) {
+var renderComments = function (comments) {
   var listCommentsBigPicture = bigPicture.querySelector('.social__comments');
   var fragment = document.createDocumentFragment();
-  commentsItem.forEach(function (item) {
+  comments.forEach(function (item) {
     fragment.appendChild(renderComment(item));
   });
   listCommentsBigPicture.innerHTML = '';
