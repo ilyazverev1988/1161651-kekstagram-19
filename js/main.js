@@ -20,6 +20,7 @@ var names = [
   'Вашингтон'
 ];
 var picture = document.querySelector('.pictures');
+var bigPicture = document.querySelector('.big-picture');
 
 // перемешивание массива
 var mixData = function (array) {
@@ -110,3 +111,56 @@ var renderPhotos = function (photos) {
 var blocksPhotos = createDataForBlockPhoto(NUMBER_OF_PHOTOS);
 renderPhotos(blocksPhotos);
 
+// новое задание
+// показывает большую картинку
+var showBigPicture = function (image) {
+  var imgBigPicture = bigPicture.querySelector('.big-picture__img img');
+  var likesBigPicture = bigPicture.querySelector('.likes-count');
+  var quantityCommentsBigPicture = bigPicture.querySelector('.comments-count');
+  var descriptionBigPicture = bigPicture.querySelector('.social__caption');
+
+  bigPicture.classList.remove('hidden');
+  imgBigPicture.src = image.url;
+  likesBigPicture.textContent = image.likes;
+  quantityCommentsBigPicture.textContent = image.comments.length;
+  descriptionBigPicture.textContent = image.description;
+  renderComments(image);
+  bigPicture.querySelector('.social__comment-count').classList.add('hidden');
+  bigPicture.querySelector('.comments-loader').classList.add('hidden');
+  document.body.classList.add('modal-open');
+};
+
+// создание коментария
+var renderComment = function (block) {
+  var commentItem = document.querySelector('.social__comment');
+  var commentElement = commentItem.cloneNode(true);
+  commentElement.querySelector('.social__picture').src = block.avatar;
+  commentElement.querySelector('.social__picture').alt = block.name;
+  commentElement.querySelector('.social__text').textContent = block.message;
+  return commentElement;
+};
+
+// удаление существующих комментариев
+var deleteExistingComments = function () {
+  var comments = bigPicture.querySelectorAll('.social__text');
+  var avatars = bigPicture.querySelectorAll('.social__picture');
+  comments.forEach(function (item) {
+    item.remove();
+  });
+  avatars.forEach(function (item) {
+    item.remove();
+  });
+};
+
+// отрисовка комментариев на большой картинке
+var renderComments = function (commentsItem) {
+  var listCommentsBigPicture = bigPicture.querySelector('.social__comments');
+  var fragment = document.createDocumentFragment();
+  commentsItem.comments.forEach(function (item) {
+    fragment.appendChild(renderComment(item));
+  });
+  deleteExistingComments();
+  listCommentsBigPicture.appendChild(fragment);
+};
+
+showBigPicture(blocksPhotos[0]);
