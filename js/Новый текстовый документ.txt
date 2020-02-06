@@ -1,0 +1,90 @@
+'use strict';
+
+var ESC_KEY = 'Escape';
+var uploadFile = document.querySelector('#upload-file');
+var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+var uploadCancel = imgUploadOverlay.querySelector('#upload-cancel');
+
+// imgUploadOverlay.classList.remove('hidden'); // удалить для отладки
+
+var textHashtag = document.querySelector('.text__hashtags');
+var imgUploadSubmit = document.querySelector('.img-upload__submit');
+
+// преобразование строки в массив
+var onHashtagCheck = function () {
+  textHashtag.setCustomValidity('');
+  var tags = textHashtag.value;
+  var toLowerCaseTags = tags.toLowerCase();
+  var spliteTags = toLowerCaseTags.split(' ');
+  console.log(spliteTags);
+  checkTags(spliteTags);
+};
+
+// очистка поля ошибки
+var clearCustomValidity = function (object) {
+  object.setCustomValidity('');
+  object.style.borderColor = '';
+};
+
+// установка красной обводки у элемента
+var setRedBorder = function (object) {
+  object.style.borderColor = 'red';
+};
+
+// проверка первого элемента на #
+var checkFirstChar = function (tag) {
+  var stringTag = tag + '';
+  var firstChar = stringTag.charAt(0);
+  return firstChar;
+};
+
+var checkTags = function (array) {
+  if (array.length > 5) {
+    textHashtag.setCustomValidity(
+        'Укажите не больше пяти хештегов'
+    );
+    setRedBorder(textHashtag);
+  } else if (array.length <= 5) {
+    clearCustomValidity(textHashtag);
+  } else {
+    for (var i = 0; i < array.length; i++) {
+      if (
+        array[i] === '#' && array[i].length === 1
+      ) {
+        textHashtag.setCustomValidity(
+            'Хештег не может состоять только из решетки'
+        );
+        setRedBorder(textHashtag);
+        break;
+      } else if (array[i].lenght > 20) {
+        textHashtag.setCustomValidity(
+            'Хештег не модет быть длиннее 20 символов (решетка учитывается)'
+        );
+        setRedBorder(textHashtag);
+        break;
+      } else if (checkFirstChar(array[i]) !== '#') {
+        textHashtag.setCustomValidity(
+            'Хэш-тег должен начинаться с символа #'
+        );
+        setRedBorder(textHashtag);
+        break;
+      } else {
+        clearCustomValidity(textHashtag);
+      }
+    }
+  }
+};
+
+textHashtag.addEventListener('input', onHashtagCheck);
+
+
+var arr = [10, 'привет', 30];
+
+if (checkFirstChar(arr[2]) === '1') {
+  console.log('работает');
+} else {
+  console.log('не работает');
+}
+
+console.log(checkFirstChar(arr[2]));
+
