@@ -88,9 +88,7 @@ var checkTags = function (array) {
         setRedBorder(textHashtag);
         break;
       } else if (checkFirstChar(array[i]) !== '#' && array[0] !== '') {
-        textHashtag.setCustomValidity(
-            'Хэш-тег должен начинаться с символа #'
-        );
+        textHashtag.setCustomValidity('Хэш-тег должен начинаться с символа #');
         setRedBorder(textHashtag);
         break;
       } else if (!array[i].match(/^#[0-9a-zа-я]+$/)) {
@@ -107,14 +105,11 @@ var checkTags = function (array) {
 
 textHashtag.addEventListener('input', onHashtagCheck);
 
-// слайдер
+// ползунок
 var pinSlaider = document.querySelector('.effect-level__pin');
 var lineSlider = document.querySelector('.effect-level__line');
 var inputSlaider = document.querySelector('.effect-level__value');
 
-
 pinSlaider.addEventListener('mouseup', function () {
-  inputSlaider.value =
-      (pinSlaider.offsetLeft / lineSlider.offsetWidth) * 100;
+  inputSlaider.value = (pinSlaider.offsetLeft / lineSlider.offsetWidth) * 100;
 });
-

@@ -151,4 +151,4 @@ var renderComments = function (comments) {
   listCommentsBigPicture.appendChild(fragment);
 };
 
-showBigPicture(blocksPhotos[0]);
+// showBigPicture(blocksPhotos[0]);
