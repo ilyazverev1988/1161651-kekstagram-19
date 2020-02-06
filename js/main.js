@@ -151,4 +151,10 @@ var renderComments = function (comments) {
   listCommentsBigPicture.appendChild(fragment);
 };
 
-// showBigPicture(blocksPhotos[0]);
+showBigPicture(blocksPhotos[0]);
+// закрытие большого окна, временно
+var bigPictureCancel = document.querySelector('.big-picture__cancel');
+var bigPictureOverlay = document.querySelector('.big-picture');
+bigPictureCancel.addEventListener('click', function () {
+  bigPictureOverlay.classList.add('hidden');
+});
