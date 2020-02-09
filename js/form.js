@@ -252,7 +252,7 @@ var changeEffect = function () {
     }
   };
 
-  // функция расчета эффекта
+  // функция расчета эффектов
   var calculationEffect = function () {
     switch (imagePreview.className) {
       case 'effects__preview--chrome':
