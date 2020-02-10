@@ -367,7 +367,7 @@ var changeSize = function () {
   controlValue.value = scaleNumber + '%';
 
 
-  // общая функция изменения размера
+  // общая функция изменения размер
   var onButtonSizeClick = function (evt) {
     // функция увеличения размера
     var changeSizeBigger = function () {
