@@ -24,8 +24,11 @@ uploadCancel.addEventListener('click', function () {
   closePopup();
 });
 
+// открытие формы на изменение картинки
 uploadFile.addEventListener('change', function () {
   document.addEventListener('keydown', onPopupEscPress);
+  setDefaultEffects();
+  slider.classList.add('hidden');
   imgUploadOverlay.classList.remove('hidden');
 });
 
@@ -205,19 +208,27 @@ clearCustomValidity(textHashtag);
 */
 textHashtag.addEventListener('input', onHashtagInput);
 
+// функция установки дефолтных значений дял эффектов
+var setDefaultEffects = function () {
+  inputSlider.value = 100;
+  pinSlider.style.left = lineSlider.offsetWidth + 'px';
+  effectLevel.style.width = lineSlider.offsetWidth + 'px';
+}
+var pinSlider = document.querySelector('.effect-level__pin');
+var lineSlider = document.querySelector('.effect-level__line');
+var effectLevel = document.querySelector('.effect-level__depth');
+var inputSlider = document.querySelector(
+  '.effect-level__value'
+);
+var imagePreview = document.querySelector(
+  '.img-upload__preview'
+);
+var effectList = document.querySelector('.effects__list');
+var slider = document.querySelector('.effect-level');
+
+
 // изменение эффекта на картинку
 var changeEffect = function () {
-  var pinSlider = document.querySelector('.effect-level__pin');
-  var lineSlider = document.querySelector('.effect-level__line');
-  var effectLevel = document.querySelector('.effect-level__depth');
-  var inputSlider = document.querySelector(
-      '.effect-level__value'
-  );
-  var imagePreview = document.querySelector(
-      '.img-upload__preview'
-  );
-  var effectList = document.querySelector('.effects__list');
-  var slider = document.querySelector('.effect-level');
 
   // функция определения эффекта
   var onClickPreviewImage = function (evt) {
@@ -230,22 +241,27 @@ var changeEffect = function () {
       case 'effect-chrome':
         slider.classList.remove('hidden');
         imagePreview.classList.add('effects__preview--chrome');
+        setDefaultEffects();
         break;
       case 'effect-sepia':
         slider.classList.remove('hidden');
         imagePreview.classList.add('effects__preview--sepia');
+        setDefaultEffects();
         break;
       case 'effect-marvin':
         slider.classList.remove('hidden');
         imagePreview.classList.add('effects__preview--marvin');
+        setDefaultEffects();
         break;
       case 'effect-phobos':
         slider.classList.remove('hidden');
         imagePreview.classList.add('effects__preview--phobos');
+        setDefaultEffects();
         break;
       case 'effect-heat':
         slider.classList.remove('hidden');
         imagePreview.classList.add('effects__preview--heat');
+        setDefaultEffects();
         break;
       default:
         slider.classList.remove('hidden');
@@ -306,7 +322,7 @@ var changeEffect = function () {
       pinSlider.style.left = newPosition + 'px';
       effectLevel.style.width = newPosition + 'px';
       inputSlider.value = +Math.round(
-          pinSlider.offsetLeft / lineSlider.offsetWidth * 100
+        pinSlider.offsetLeft / lineSlider.offsetWidth * 100
       );
       calculationEffect();
     };
@@ -324,25 +340,32 @@ var changeEffect = function () {
 };
 changeEffect();
 
+// функция установки по умолчанию размера при открытии страницы
+var setDefaultSize = function () {
+  controlValue.value = scaleNumber + '%';
+  imagePreview.style.transform = 'scale(' + scaleNumber / 100 + ')';
+};
+
 // изменение размеров картинки
 var changeSize = function () {
   var controlSmaller = document.querySelector(
-      '.scale__control--smaller'
+    '.scale__control--smaller'
   );
   var controlBigger = document.querySelector(
-      '.scale__control--bigger'
+    '.scale__control--bigger'
   );
   var controlValue = document.querySelector(
-      '.scale__control--value'
+    '.scale__control--value'
   );
   var imagePreview = document.querySelector(
-      '.img-upload__preview'
+    '.img-upload__preview'
   );
   var DEFAULT_VALUE_SIZE = 100;
   var MIN_VALUE = 0;
   var STEP_CHANGE_SIZE = 25;
   var scaleNumber = DEFAULT_VALUE_SIZE;
   controlValue.value = scaleNumber + '%';
+
 
   // общая функция изменения размера
   var onButtonSizeClick = function (evt) {
