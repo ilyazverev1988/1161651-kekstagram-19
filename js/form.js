@@ -24,7 +24,7 @@ var closePopup = function () {
 // функция закрытия формы при нажатии на крестик или ESC
 uploadCancel.addEventListener('click', function () {
   closePopup();
-  controlValue.value = 100;
+  controlValue.setAttribute('value', '100%');
   imageUploadPreview.style.transform = 'scale(' + 1 + ')';
   imagePreview.classList.remove('effects__preview' + classEffect + '');
   setDefaultEffects();
@@ -257,45 +257,60 @@ var changeEffect = function () {
   };
 
   // нажатие на ползунок
-  pinSlider.addEventListener('mousedown', function (evt) {
+  pinSlider.addEventListener('mouseup', function (evt) {
+    //  pinSlider.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
     var startCoords = {
       x: evt.clientX
     };
 
-    var onMouseMove = function (moveEvt) {
+    /* var onMouseMove = function (
+        moveEvt
+    ) {
       moveEvt.preventDefault();
 
-      var shift = {
-        x: startCoords.x - moveEvt.clientX
-      };
+      var shift = {x: startCoords.x - moveEvt.clientX};
 
-      startCoords = {
-        x: moveEvt.clientX
-      };
+      startCoords = {x: moveEvt.clientX}; */
 
-      var newPosition = pinSlider.offsetLeft - shift.x;
-      if (newPosition > lineSlider.offsetWidth) {
-        newPosition = lineSlider.offsetWidth;
-      } else if (newPosition < 0) {
-        newPosition = 0;
-      }
-      pinSlider.style.left = newPosition + 'px';
-      effectLevel.style.width = newPosition + 'px';
-      inputSlider.value = +Math.round(
-          pinSlider.offsetLeft / lineSlider.offsetWidth * 100
+    var newPosition = pinSlider.offsetLeft - startCoords.x; //  var newPosition = pinSlider.offsetLeft - shift.x;
+    if (
+      newPosition > lineSlider.offsetWidth
+    ) {
+      newPosition = lineSlider.offsetWidth;
+    } else if (
+      newPosition < 0
+    ) {
+      newPosition = 0;
+    }
+    pinSlider.style.left = newPosition + 'px';
+    effectLevel.style.width = newPosition + 'px';
+    inputSlider.value = +Math.round(
+        (pinSlider.offsetLeft / lineSlider.offsetWidth) * 100
+    );
+    calculationEffect();
+    // };
+
+    /* var onMouseUp = function () {
+      document.removeEventListener(
+          'mousemove',
+          onMouseMove
       );
-      calculationEffect();
+      document.removeEventListener(
+          'mouseup',
+          onMouseUp
+      );
     };
 
-    var onMouseUp = function () {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener(
+        'mousemove',
+        onMouseMove
+    );
+    document.addEventListener(
+        'mouseup',
+        onMouseUp
+    );*/
   });
 
   effectList.addEventListener('click', onClickPreviewImage);
@@ -355,3 +370,18 @@ var changeSize = function () {
 
 };
 changeSize();
+
+// функция валидации комментариев
+var textComment = document.querySelector('.text__description');
+var commentValidate = function () {
+  if (textComment.value.length > 10) {
+    textComment.setCustomValidity(
+        'Длина комментария не может составлять больше 140 символов'
+    );
+    setRedBorder(textComment);
+  } else {
+    clearCustomValidity(textComment);
+  }
+};
+textComment.addEventListener('input', commentValidate);
+
