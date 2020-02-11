@@ -14,20 +14,25 @@ var onPopupEscPress = function (evt) {
   }
 };
 
+// функция закрытие формы
 var closePopup = function () {
   imgUploadOverlay.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
   uploadFile.value = '';
 };
 
+// функция закрытия формы при нажатии на крестик или ESC
 uploadCancel.addEventListener('click', function () {
   closePopup();
+  controlValue.value = 100;
+  imageUploadPreview.style.transform = 'scale(' + 1 + ')';
+  imagePreview.classList.remove('effects__preview' + classEffect + '');
+  setDefaultEffects();
 });
 
 // открытие формы на изменение картинки
 uploadFile.addEventListener('change', function () {
   document.addEventListener('keydown', onPopupEscPress);
-  setDefaultEffects();
   slider.classList.add('hidden');
   imgUploadOverlay.classList.remove('hidden');
 });
@@ -133,10 +138,8 @@ var checkGridInStartTag = function (tag) {
 
 // проверка содержимого тэга
 var checkTagContent = function (tag) {
-  if (!tag.match(/^#[0-9a-zа-я]+$/)) {
+  if (!tag.match(/^#[0-9a-zа-я]+$/) && tag[0] === '#') {
     messageValidity = 'Строка после # должна состоять из букв и чисел';
-  } else {
-    clearCustomValidity(textHashtag);
   }
   setRedBorder(textHashtag);
   return messageValidity;
@@ -153,6 +156,7 @@ var messageValidity = '';
 // проверка тегов и установка сообщений
 var checkTags = function (array) {
   messageValidity = '';
+
   checkLengthTags(array);
   checkMountTags(array);
   checkRepeatTags(array);
@@ -162,110 +166,68 @@ var checkTags = function (array) {
     checkNumberCharacters20(tag);
     checkGridInStartTag(tag);
   });
+
   if (messageValidity === '') {
     textHashtag.style.borderColor = '';
   }
   textHashtag.setCustomValidity(messageValidity);
 };
 
-/* if (array.length > 5) {
-    textHashtag.setCustomValidity('Укажите не больше пяти хештегов');
-    setRedBorder(textHashtag);
-  } else if (checkRepeatTag(array).length !== 0) {
-    textHashtag.setCustomValidity('Хештеги не могут повторяться');
-    setRedBorder(textHashtag);
-  } else if (array.length === 0) {
-clearCustomValidity(textHashtag);
-  } else {
-    for (var i = 0; i < array.length; i++) {
-      if (array[i] === '#' && array[i].length === 1) {
-        textHashtag.setCustomValidity(
-            'Хештег не может состоять только из решетки'
-        );
-        setRedBorder(textHashtag);
-        break;
-      } else if (array[i].length > 20) {
-        textHashtag.setCustomValidity(
-            'Хештег не может быть длиннее 20 символов'
-        );
-        setRedBorder(textHashtag);
-        break;
-      } else if (checkFirstChar(array[i]) !== '#' && array[0] !== '') {
-        textHashtag.setCustomValidity('Хэш-тег должен начинаться с символа #');
-        setRedBorder(textHashtag);
-        break;
-      } else if (!array[i].match(/^#[0-9a-zа-я]+$/)) {
-        textHashtag.setCustomValidity(
-            'Строка после # должна состоять из букв и чисел'
-        );
-        setRedBorder(textHashtag);
-      } else {
-        clearCustomValidity(textHashtag);
-      }
-    }
-  }
-};
-*/
 textHashtag.addEventListener('input', onHashtagInput);
 
-// функция установки дефолтных значений дял эффектов
+// функция установки дефолтных значений для эффектов
 var setDefaultEffects = function () {
   inputSlider.value = 100;
   pinSlider.style.left = lineSlider.offsetWidth + 'px';
   effectLevel.style.width = lineSlider.offsetWidth + 'px';
-}
+};
+
 var pinSlider = document.querySelector('.effect-level__pin');
 var lineSlider = document.querySelector('.effect-level__line');
 var effectLevel = document.querySelector('.effect-level__depth');
-var inputSlider = document.querySelector(
-  '.effect-level__value'
-);
-var imagePreview = document.querySelector(
-  '.img-upload__preview'
-);
+var inputSlider = document.querySelector('.effect-level__value');
+var imagePreview = document.querySelector('.img-upload__preview');
 var effectList = document.querySelector('.effects__list');
 var slider = document.querySelector('.effect-level');
-
+var classEffect;
 
 // изменение эффекта на картинку
 var changeEffect = function () {
-
   // функция определения эффекта
   var onClickPreviewImage = function (evt) {
     imagePreview.classList = '';
     imagePreview.style.filter = '';
+    classEffect = '';
     switch (evt.target.id) {
       case 'effect-none':
         slider.classList.add('hidden');
+        classEffect = '--none';
         break;
       case 'effect-chrome':
         slider.classList.remove('hidden');
-        imagePreview.classList.add('effects__preview--chrome');
-        setDefaultEffects();
+        classEffect = '--chrome';
         break;
       case 'effect-sepia':
         slider.classList.remove('hidden');
-        imagePreview.classList.add('effects__preview--sepia');
-        setDefaultEffects();
+        classEffect = '--sepia';
         break;
       case 'effect-marvin':
         slider.classList.remove('hidden');
-        imagePreview.classList.add('effects__preview--marvin');
-        setDefaultEffects();
+        classEffect = '--marvin';
         break;
       case 'effect-phobos':
         slider.classList.remove('hidden');
-        imagePreview.classList.add('effects__preview--phobos');
-        setDefaultEffects();
+        classEffect = '--phobos';
         break;
       case 'effect-heat':
         slider.classList.remove('hidden');
-        imagePreview.classList.add('effects__preview--heat');
-        setDefaultEffects();
+        classEffect = '--heat';
         break;
       default:
         slider.classList.remove('hidden');
     }
+    imagePreview.classList.add('effects__preview' + classEffect + '');
+    setDefaultEffects();
   };
 
   // функция расчета эффектов
@@ -322,7 +284,7 @@ var changeEffect = function () {
       pinSlider.style.left = newPosition + 'px';
       effectLevel.style.width = newPosition + 'px';
       inputSlider.value = +Math.round(
-        pinSlider.offsetLeft / lineSlider.offsetWidth * 100
+          pinSlider.offsetLeft / lineSlider.offsetWidth * 100
       );
       calculationEffect();
     };
@@ -340,33 +302,22 @@ var changeEffect = function () {
 };
 changeEffect();
 
-// функция установки по умолчанию размера при открытии страницы
-var setDefaultSize = function () {
-  controlValue.value = scaleNumber + '%';
-  imagePreview.style.transform = 'scale(' + scaleNumber / 100 + ')';
-};
-
 // изменение размеров картинки
+var controlValue = document.querySelector('.scale__control--value');
+var imageUploadPreview = document.querySelector('.img-upload__preview');
 var changeSize = function () {
+
   var controlSmaller = document.querySelector(
-    '.scale__control--smaller'
+      '.scale__control--smaller'
   );
   var controlBigger = document.querySelector(
-    '.scale__control--bigger'
+      '.scale__control--bigger'
   );
-  var controlValue = document.querySelector(
-    '.scale__control--value'
-  );
-  var imagePreview = document.querySelector(
-    '.img-upload__preview'
-  );
-  var DEFAULT_VALUE_SIZE = 100;
   var MIN_VALUE = 0;
   var STEP_CHANGE_SIZE = 25;
+  var DEFAULT_VALUE_SIZE = 100;
   var scaleNumber = DEFAULT_VALUE_SIZE;
   controlValue.value = scaleNumber + '%';
-
-
   // общая функция изменения размер
   var onButtonSizeClick = function (evt) {
     // функция увеличения размера
@@ -379,7 +330,7 @@ var changeSize = function () {
         scaleNumber += STEP_CHANGE_SIZE;
       }
       controlValue.value = scaleNumber + '%';
-      imagePreview.style.transform = 'scale(' + scaleNumber / 100 + ')';
+      imageUploadPreview.style.transform = 'scale(' + scaleNumber / 100 + ')';
     };
     // функция уменьшения размера
     var changeSizeSmaller = function () {
@@ -389,7 +340,7 @@ var changeSize = function () {
         scaleNumber -= STEP_CHANGE_SIZE;
       }
       controlValue.value = scaleNumber + '%';
-      imagePreview.style.transform = 'scale(' + scaleNumber / 100 + ')';
+      imageUploadPreview.style.transform = 'scale(' + scaleNumber / 100 + ')';
     };
 
     if (evt.target === controlBigger) {
