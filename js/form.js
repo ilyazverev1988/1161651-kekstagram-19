@@ -78,9 +78,7 @@ var setRedBorder = function (object) {
 
 // проверка первого элемента на #
 var checkFirstChar = function (tag) {
-  var stringTag = tag + '';
-  var firstChar = stringTag.charAt(0);
-  return firstChar;
+  return tag.charAt(0);
 };
 
 // проверка на повторяющийся тэг
@@ -107,7 +105,7 @@ var checkOnlyGridInTag = function (tag) {
 };
 
 // проверка длины тега больше 20 символов
-var checkNumberCharacters20 = function (tag) {
+var checkNumberCharacters = function (tag) {
   return tag.length > 20;
 };
 
@@ -126,11 +124,9 @@ var checkLengthTags = function (array) {
   return array.length === 0;
 };
 
-var messageValidity = '';
-
 // проверка тегов и установка сообщений
 var checkTags = function (array) {
-  messageValidity = '';
+  var messageValidity = '';
   if (checkMountTags(array)) {
     messageValidity = 'Укажите не больше пяти хештегов';
     setRedBorder(textHashtag);
@@ -140,7 +136,7 @@ var checkTags = function (array) {
   } else if (checkLengthTags(array)) {
     clearCustomValidity(textHashtag);
   } else {
-    array.some(function (tag) {
+    array.forEach(function (tag) {
       if (checkOnlyGridInTag(tag)) {
         messageValidity = 'Хештег не может состоять только из решетки';
         setRedBorder(textHashtag);
@@ -148,7 +144,7 @@ var checkTags = function (array) {
         messageValidity =
                  'Строка после # должна состоять из букв и чисел';
         setRedBorder(textHashtag);
-      } else if (checkNumberCharacters20(tag)) {
+      } else if (checkNumberCharacters(tag)) {
         messageValidity = 'Хештег не может быть длиннее 20 символов';
         setRedBorder(textHashtag);
       } else if (checkGridInStartTag(tag)) {
@@ -167,8 +163,8 @@ textHashtag.addEventListener('input', onHashtagInput);
 // функция установки дефолтных значений для эффектов
 var setDefaultEffects = function () {
   inputSlider.value = 100;
-  pinSlider.style.left = lineSlider.offsetWidth + 'px';
-  effectLevel.style.width = lineSlider.offsetWidth + 'px';
+  pinSlider.style.left = 100 + '%';
+  effectLevel.style.width = 100 + '%';
 };
 
 var pinSlider = document.querySelector('.effect-level__pin');
@@ -282,61 +278,50 @@ effectList.addEventListener('change', onClickPreviewImage);
 var controlValue = document.querySelector('.scale__control--value');
 var imageUploadPreview = document.querySelector('.img-upload__preview img');
 
-var changeSize = function () {
-  var MIN_VALUE = 25;
-  var STEP_CHANGE_SIZE = 25;
-  var DEFAULT_VALUE_SIZE = 100;
-  var scaleNumber = DEFAULT_VALUE_SIZE;
-  var controlSmaller = document.querySelector(
-      '.scale__control--smaller'
-  );
-  var controlBigger = document.querySelector(
-      '.scale__control--bigger'
-  );
-  controlValue.value = scaleNumber + '%';
+var MIN_VALUE = 25;
+var STEP_CHANGE_SIZE = 25;
+var DEFAULT_VALUE_SIZE = 100;
+var scaleNumber = DEFAULT_VALUE_SIZE;
+var controlSmaller = document.querySelector(
+    '.scale__control--smaller'
+);
+var controlBigger = document.querySelector(
+    '.scale__control--bigger'
+);
+// var imgUploadScale = document.querySelector('.img-upload__scale');
+controlValue.value = scaleNumber + '%';
 
-  // функция увеличения размера
-  var changeSizeBigger = function () {
-    if (
-      scaleNumber + STEP_CHANGE_SIZE >= DEFAULT_VALUE_SIZE
-    ) {
-      scaleNumber = DEFAULT_VALUE_SIZE;
-    } else {
-      scaleNumber += STEP_CHANGE_SIZE;
-    }
-    controlValue.value = scaleNumber + '%';
-    imageUploadPreview.style.transform = 'scale(' + scaleNumber / 100 + ')';
-  };
-
-  // функция уменьшения размера
-  var changeSizeSmaller = function () {
-    if (scaleNumber - STEP_CHANGE_SIZE <= MIN_VALUE) {
-      scaleNumber = MIN_VALUE;
-    } else {
-      scaleNumber -= STEP_CHANGE_SIZE;
-    }
-    controlValue.value = scaleNumber + '%';
-    imageUploadPreview.style.transform = 'scale(' + scaleNumber / 100 + ')';
-  };
-
-  // функция выбора кнопки размера
-  var setSize = function (evt) {
-    if (evt.target === controlBigger) {
-      changeSizeBigger();
-    } else if (evt.target === controlSmaller) {
-      changeSizeSmaller();
-    } else if (evt.target === uploadCancel) {
+// функция выбора кнопки размера и изименения размера
+var onClickSize = function (evt) {
+  switch (evt.target) {
+    case controlBigger:
+      if (scaleNumber + STEP_CHANGE_SIZE >= DEFAULT_VALUE_SIZE) {
+        scaleNumber = DEFAULT_VALUE_SIZE;
+      } else {
+        scaleNumber += STEP_CHANGE_SIZE;
+      }
+      break;
+    case controlSmaller:
+      if (scaleNumber - STEP_CHANGE_SIZE <= MIN_VALUE) {
+        scaleNumber = MIN_VALUE;
+      } else {
+        scaleNumber -= STEP_CHANGE_SIZE;
+      }
+      break;
+    case uploadCancel:
       scaleNumber = 100;
-    }
-  };
-
-  imgUploadOverlay.addEventListener('click', setSize);
+      break;
+  }
+  controlValue.value = scaleNumber + '%';
+  imageUploadPreview.style.transform = 'scale(' + scaleNumber / 100 + ')';
 };
-changeSize();
+
+imgUploadOverlay.addEventListener('click', onClickSize);
+
 
 // функция валидации комментариев
 var textComment = document.querySelector('.text__description');
-var commentValidate = function () {
+var onInputComment = function () {
   if (textComment.value.length > 140) {
     textComment.setCustomValidity(
         'Длина комментария не может составлять больше 140 символов'
@@ -346,5 +331,5 @@ var commentValidate = function () {
     clearCustomValidity(textComment);
   }
 };
-textComment.addEventListener('input', commentValidate);
+textComment.addEventListener('input', onInputComment);
 

@@ -152,9 +152,20 @@ var renderComments = function (comments) {
 };
 
 showBigPicture(blocksPhotos[0]);
+
 // закрытие большого окна, временно
 var bigPictureCancel = document.querySelector('.big-picture__cancel');
 var bigPictureOverlay = document.querySelector('.big-picture');
 bigPictureCancel.addEventListener('click', function () {
   bigPictureOverlay.classList.add('hidden');
+  document.body.classList.remove('modal-open');
 });
+
+/* // функция показа любой картинки
+var selectBigPicture = function () {
+  var smallPictureAll = document.querySelectorAll('.picture');
+  smallPictureAll.forEach(function (item) {
+    item.addEventListener("click", showBigPicture(blocksPhotos[0]));
+  });
+};
+selectBigPicture();*/
