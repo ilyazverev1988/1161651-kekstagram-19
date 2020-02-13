@@ -78,8 +78,9 @@ var setRedBorder = function (object) {
 
 // проверка первого элемента на #
 var checkFirstChar = function (tag) {
-  var stringTag = tag;
-  return stringTag.charAt(0);
+  var stringTag = tag + '';
+  var firstChar = stringTag.charAt(0);
+  return firstChar;
 };
 
 // проверка на повторяющийся тэг
@@ -90,30 +91,67 @@ var checkRepeatTag = function (tags) {
   return tags;
 };
 
+// проверка количества хэштэгов
+var checkMountTags = function (array) {
+  return array.length > 5;
+};
+
+// проверка повторов хэштегов
+var checkRepeatTags = function (array) {
+  return checkRepeatTag(array).length !== 0;
+};
+
+// проверка тега на решетку
+var checkOnlyGridInTag = function (tag) {
+  return tag === '#' && tag.length === 1;
+};
+
+// проверка длины тега больше 20 символов
+var checkNumberCharacters20 = function (tag) {
+  return tag.length > 20;
+};
+
+// проверка начала тега с #
+var checkGridInStartTag = function (tag) {
+  return checkFirstChar(tag) !== '#' && tag !== '';
+};
+
+// проверка содержимого тэга
+var checkTagContent = function (tag) {
+  return !tag.match(/^#[0-9a-zа-я]+$/) && tag[0] === '#';
+};
+
+// проверка массива на пустоту
+var checkLengthTags = function (array) {
+  return array.length === 0;
+};
+
 var messageValidity = '';
+
 // проверка тегов и установка сообщений
 var checkTags = function (array) {
   messageValidity = '';
-  if (array.length > 5) {
+  if (checkMountTags(array)) {
     messageValidity = 'Укажите не больше пяти хештегов';
     setRedBorder(textHashtag);
-  } else if (checkRepeatTag(array).length !== 0) {
+  } else if (checkRepeatTags(array)) {
     messageValidity = 'Хештеги не могут повторяться';
     setRedBorder(textHashtag);
-  } else if (array.length === 0) {
+  } else if (checkLengthTags(array)) {
     clearCustomValidity(textHashtag);
   } else {
-    array.forEach(function (tag) {
-      if (tag === '#' && tag.length === 1) {
+    array.some(function (tag) {
+      if (checkOnlyGridInTag(tag)) {
         messageValidity = 'Хештег не может состоять только из решетки';
         setRedBorder(textHashtag);
-      } else if (!tag.match(/^#[0-9a-zа-я]+$/) && tag[0] === '#') {
-        messageValidity = 'Строка после # должна состоять из букв и чисел';
+      } else if (checkTagContent(tag)) {
+        messageValidity =
+                 'Строка после # должна состоять из букв и чисел';
         setRedBorder(textHashtag);
-      } else if (tag.length > 20) {
+      } else if (checkNumberCharacters20(tag)) {
         messageValidity = 'Хештег не может быть длиннее 20 символов';
         setRedBorder(textHashtag);
-      } else if (checkFirstChar(tag) !== '#' && tag !== '') {
+      } else if (checkGridInStartTag(tag)) {
         messageValidity = 'Хэш-тег должен начинаться с символа #';
         setRedBorder(textHashtag);
       } else {
