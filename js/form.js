@@ -275,49 +275,38 @@ pinSlider.addEventListener('mouseup', function (evt) {
 effectList.addEventListener('change', onClickPreviewImage);
 
 // изменение размеров картинки
-var controlValue = document.querySelector('.scale__control--value');
-var imageUploadPreview = document.querySelector('.img-upload__preview img');
-
 var MIN_VALUE = 25;
 var STEP_CHANGE_SIZE = 25;
 var DEFAULT_VALUE_SIZE = 100;
-var scaleNumber = DEFAULT_VALUE_SIZE;
+var controlValue = document.querySelector('.scale__control--value');
+var imageUploadPreview = document.querySelector('.img-upload__preview img');
 var controlSmaller = document.querySelector(
     '.scale__control--smaller'
 );
 var controlBigger = document.querySelector(
     '.scale__control--bigger'
 );
-// var imgUploadScale = document.querySelector('.img-upload__scale');
-controlValue.value = scaleNumber + '%';
+var imgUploadScale = document.querySelector('.img-upload__scale');
+controlValue.value = 100 + '%';
 
 // функция выбора кнопки размера и изименения размера
 var onClickSize = function (evt) {
-  switch (evt.target) {
-    case controlBigger:
-      if (scaleNumber + STEP_CHANGE_SIZE >= DEFAULT_VALUE_SIZE) {
-        scaleNumber = DEFAULT_VALUE_SIZE;
-      } else {
-        scaleNumber += STEP_CHANGE_SIZE;
-      }
-      break;
-    case controlSmaller:
-      if (scaleNumber - STEP_CHANGE_SIZE <= MIN_VALUE) {
-        scaleNumber = MIN_VALUE;
-      } else {
-        scaleNumber -= STEP_CHANGE_SIZE;
-      }
-      break;
-    case uploadCancel:
-      scaleNumber = 100;
-      break;
+  var currentScale = parseInt(controlValue.value, 10);
+  if (evt.target === controlBigger && currentScale < DEFAULT_VALUE_SIZE) {
+    STEP_CHANGE_SIZE = 25;
+  } else if (evt.target === controlSmaller && currentScale > MIN_VALUE) {
+    STEP_CHANGE_SIZE = -25;
   }
-  controlValue.value = scaleNumber + '%';
-  imageUploadPreview.style.transform = 'scale(' + scaleNumber / 100 + ')';
+  currentScale = currentScale + STEP_CHANGE_SIZE;
+  if (currentScale > DEFAULT_VALUE_SIZE) {
+    currentScale = 100;
+  } else if (currentScale <= MIN_VALUE) {
+    currentScale = 25;
+  }
+  controlValue.value = currentScale + '%';
+  imageUploadPreview.style.transform = 'scale(' + currentScale / 100 + ')';
 };
-
-imgUploadOverlay.addEventListener('click', onClickSize);
-
+imgUploadScale.addEventListener('click', onClickSize);
 
 // функция валидации комментариев
 var textComment = document.querySelector('.text__description');
