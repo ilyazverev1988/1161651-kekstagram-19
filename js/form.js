@@ -131,11 +131,6 @@ var checkTagContent = function (array) {
   return array.some(check);
 };
 
-// проверка массива на пустоту
-var checkLengthTags = function (array) {
-  return array.length === 0;
-};
-
 // проверка тегов и установка сообщений
 var checkTags = function (array) {
   var messageValidity = '';
@@ -145,8 +140,6 @@ var checkTags = function (array) {
   } else if (checkRepeatTags(array)) {
     messageValidity = 'Хештеги не могут повторяться';
     setRedBorder(textHashtag);
-  } else if (checkLengthTags(array)) {
-    clearCustomValidity(textHashtag);
   } else if (checkOnlyGridInTag(array)) {
     messageValidity = 'Хештег не может состоять только из решетки';
     setRedBorder(textHashtag);
@@ -183,7 +176,6 @@ var slider = document.querySelector('.effect-level');
 
 // функция определения эффекта
 var onPreviewImageClick = function (evt) {
-  imageUploadPreview.className = '';
   if (evt.target.value === 'none') {
     imageUploadPreview.className = '';
     slider.classList.add('hidden');
@@ -294,7 +286,7 @@ var imgUploadScale = document.querySelector('.img-upload__scale');
 controlValue.value = 100 + '%';
 
 // функция выбора кнопки размера и изименения размера
-var onSizeСhoice = function (evt) {
+var onSizeClick = function (evt) {
   var stepChangeSize = 0;
   var currentScale = parseInt(controlValue.value, 10);
   if (evt.target === controlBigger && currentScale < DEFAULT_VALUE_SIZE) {
@@ -306,7 +298,7 @@ var onSizeСhoice = function (evt) {
   controlValue.value = currentScale + '%';
   imageUploadPreview.style.transform = 'scale(' + currentScale / 100 + ')';
 };
-imgUploadScale.addEventListener('click', onSizeСhoice);
+imgUploadScale.addEventListener('click', onSizeClick);
 
 // функция валидации комментариев
 var textComment = document.querySelector('.text__description');
