@@ -100,23 +100,35 @@ var checkRepeatTags = function (array) {
 };
 
 // проверка тега на решетку
-var checkOnlyGridInTag = function (tag) {
-  return tag === '#' && tag.length === 1;
+var checkOnlyGridInTag = function (array) {
+  var check = function (tag) {
+    return tag === '#' && tag.length === 1;
+  };
+  return array.some(check);
 };
 
 // проверка длины тега больше 20 символов
-var checkNumberCharacters = function (tag) {
-  return tag.length > 20;
+var checkNumberCharacters = function (array) {
+  var check = function (tag) {
+    return tag.length > 20;
+  };
+  return array.some(check);
 };
 
 // проверка начала тега с #
-var checkGridInStartTag = function (tag) {
-  return checkFirstChar(tag) !== '#' && tag !== '';
+var checkGridInStartTag = function (array) {
+  var check = function (tag) {
+    return checkFirstChar(tag) !== '#' && tag !== '';
+  };
+  return array.some(check);
 };
 
 // проверка содержимого тэга
-var checkTagContent = function (tag) {
-  return !tag.match(/^#[0-9a-zа-я]+$/) && tag[0] === '#';
+var checkTagContent = function (array) {
+  var check = function (tag) {
+    return !tag.match(/^#[0-9a-zа-я]+$/) && tag[0] === '#';
+  };
+  return array.some(check);
 };
 
 // проверка массива на пустоту
@@ -135,25 +147,20 @@ var checkTags = function (array) {
     setRedBorder(textHashtag);
   } else if (checkLengthTags(array)) {
     clearCustomValidity(textHashtag);
+  } else if (checkOnlyGridInTag(array)) {
+    messageValidity = 'Хештег не может состоять только из решетки';
+    setRedBorder(textHashtag);
+  } else if (checkTagContent(array)) {
+    messageValidity = 'Строка после # должна состоять из букв и чисел';
+    setRedBorder(textHashtag);
+  } else if (checkNumberCharacters(array)) {
+    messageValidity = 'Хештег не может быть длиннее 20 символов';
+    setRedBorder(textHashtag);
+  } else if (checkGridInStartTag(array)) {
+    messageValidity = 'Хэш-тег должен начинаться с символа #';
+    setRedBorder(textHashtag);
   } else {
-    array.forEach(function (tag) {
-      if (checkOnlyGridInTag(tag)) {
-        messageValidity = 'Хештег не может состоять только из решетки';
-        setRedBorder(textHashtag);
-      } else if (checkTagContent(tag)) {
-        messageValidity =
-                 'Строка после # должна состоять из букв и чисел';
-        setRedBorder(textHashtag);
-      } else if (checkNumberCharacters(tag)) {
-        messageValidity = 'Хештег не может быть длиннее 20 символов';
-        setRedBorder(textHashtag);
-      } else if (checkGridInStartTag(tag)) {
-        messageValidity = 'Хэш-тег должен начинаться с символа #';
-        setRedBorder(textHashtag);
-      } else {
-        clearCustomValidity(textHashtag);
-      }
-    });
+    clearCustomValidity(textHashtag);
   }
   textHashtag.setCustomValidity(messageValidity);
 };
@@ -163,8 +170,8 @@ textHashtag.addEventListener('input', onHashtagInput);
 // функция установки дефолтных значений для эффектов
 var setDefaultEffects = function () {
   inputSlider.value = 100;
-  pinSlider.style.left = 100 + '%';
-  effectLevel.style.width = 100 + '%';
+  pinSlider.style.left = '100%';
+  effectLevel.style.width = '100%';
 };
 
 var pinSlider = document.querySelector('.effect-level__pin');
@@ -175,15 +182,13 @@ var effectList = document.querySelector('.effects__list');
 var slider = document.querySelector('.effect-level');
 
 // функция определения эффекта
-var onClickPreviewImage = function (evt) {
-  imageUploadPreview.classList = '';
+var onPreviewImageClick = function (evt) {
+  imageUploadPreview.className = '';
   if (evt.target.value === 'none') {
     imageUploadPreview.className = '';
     slider.classList.add('hidden');
   } else {
-    imageUploadPreview.classList.add(
-        'effects__preview--' + evt.target.value + ''
-    );
+    imageUploadPreview.className = 'effects__preview--' + evt.target.value;
     slider.classList.remove('hidden');
   }
   setDefaultEffects();
@@ -272,11 +277,10 @@ pinSlider.addEventListener('mouseup', function (evt) {
     );*/
 });
 
-effectList.addEventListener('change', onClickPreviewImage);
+effectList.addEventListener('change', onPreviewImageClick);
 
 // изменение размеров картинки
 var MIN_VALUE = 25;
-var STEP_CHANGE_SIZE = 25;
 var DEFAULT_VALUE_SIZE = 100;
 var controlValue = document.querySelector('.scale__control--value');
 var imageUploadPreview = document.querySelector('.img-upload__preview img');
@@ -290,27 +294,23 @@ var imgUploadScale = document.querySelector('.img-upload__scale');
 controlValue.value = 100 + '%';
 
 // функция выбора кнопки размера и изименения размера
-var onClickSize = function (evt) {
+var onSizeСhoice = function (evt) {
+  var stepChangeSize = 0;
   var currentScale = parseInt(controlValue.value, 10);
   if (evt.target === controlBigger && currentScale < DEFAULT_VALUE_SIZE) {
-    STEP_CHANGE_SIZE = 25;
+    stepChangeSize = 25;
   } else if (evt.target === controlSmaller && currentScale > MIN_VALUE) {
-    STEP_CHANGE_SIZE = -25;
+    stepChangeSize = -25;
   }
-  currentScale = currentScale + STEP_CHANGE_SIZE;
-  if (currentScale > DEFAULT_VALUE_SIZE) {
-    currentScale = 100;
-  } else if (currentScale <= MIN_VALUE) {
-    currentScale = 25;
-  }
+  currentScale = currentScale + stepChangeSize;
   controlValue.value = currentScale + '%';
   imageUploadPreview.style.transform = 'scale(' + currentScale / 100 + ')';
 };
-imgUploadScale.addEventListener('click', onClickSize);
+imgUploadScale.addEventListener('click', onSizeСhoice);
 
 // функция валидации комментариев
 var textComment = document.querySelector('.text__description');
-var onInputComment = function () {
+var onCommentInput = function () {
   if (textComment.value.length > 140) {
     textComment.setCustomValidity(
         'Длина комментария не может составлять больше 140 символов'
@@ -320,5 +320,5 @@ var onInputComment = function () {
     clearCustomValidity(textComment);
   }
 };
-textComment.addEventListener('input', onInputComment);
+textComment.addEventListener('input', onCommentInput);
 
