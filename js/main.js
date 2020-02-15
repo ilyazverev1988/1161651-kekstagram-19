@@ -135,7 +135,7 @@ var showBigPicture = function (image) {
   bigPicture.querySelector('.social__comment-count').classList.add('hidden');
   bigPicture.querySelector('.comments-loader').classList.add('hidden');
   document.body.classList.add('modal-open');
-  document.addEventListener('keydown', onBigPictureClosePress);
+  document.addEventListener('keydown', onBigPictureEscPress);
 };
 
 // создание коментария
