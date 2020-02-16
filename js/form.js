@@ -26,6 +26,7 @@ uploadCancel.addEventListener('click', function () {
   closePopup();
   controlValue.setAttribute('value', '100%');
   imageUploadPreview.style.transform = '';
+  imageUploadPreview.style.filter = '';
   imageUploadPreview.className = '';
   setDefaultEffects();
 });
@@ -184,6 +185,7 @@ var onPreviewImageClick = function (evt) {
     slider.classList.remove('hidden');
   }
   setDefaultEffects();
+  setValueOfEffect();
 };
 
 // функция расчета эффектов
@@ -214,59 +216,39 @@ var setValueOfEffect = function () {
 };
 
 // нажатие на ползунок
-pinSlider.addEventListener('mouseup', function (evt) {
-  //  pinSlider.addEventListener('mousedown', function (evt) {
+pinSlider.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
 
   var startCoords = {
     x: evt.clientX
   };
 
-  /* var onMouseMove = function (
-        moveEvt
-    ) {
-      moveEvt.preventDefault();
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    var shift = {x: startCoords.x - moveEvt.clientX};
+    startCoords = {x: moveEvt.clientX};
 
-      var shift = {x: startCoords.x - moveEvt.clientX};
-
-      startCoords = {x: moveEvt.clientX}; */
-
-  var newPosition = pinSlider.offsetLeft - startCoords.x; //  var newPosition = pinSlider.offsetLeft - shift.x;
-  if (
-    newPosition > lineSlider.offsetWidth
-  ) {
-    newPosition = lineSlider.offsetWidth;
-  } else if (
-    newPosition < 0
-  ) {
-    newPosition = 0;
-  }
-  pinSlider.style.left = 100 + '%'; /* pinSlider.style.left = newPosition + 'px';*/
-  effectLevel.style.width = 100 + '%'; /* effectLevel.style.width = newPosition + 'px';*/
-  inputSlider.value = Math.round(
-      (pinSlider.offsetLeft / lineSlider.offsetWidth) * 100
-  );
-  setValueOfEffect();
-
-  /* var onMouseUp = function () {
-      document.removeEventListener(
-          'mousemove',
-          onMouseMove
-      );
-      document.removeEventListener(
-          'mouseup',
-          onMouseUp
-      );
-    };
-
-    document.addEventListener(
-        'mousemove',
-        onMouseMove
+    var newPosition = pinSlider.offsetLeft - shift.x;
+    if (newPosition > lineSlider.offsetWidth) {
+      newPosition = lineSlider.offsetWidth;
+    } else if (newPosition < 0) {
+      newPosition = 0;
+    }
+    pinSlider.style.left = newPosition + 'px';
+    effectLevel.style.width = newPosition + 'px';
+    inputSlider.value = Math.round(
+        (pinSlider.offsetLeft / lineSlider.offsetWidth) * 100
     );
-    document.addEventListener(
-        'mouseup',
-        onMouseUp
-    );*/
+    setValueOfEffect();
+  };
+  var onMouseUp = function () {
+    document.removeEventListener('mousemove', onMouseMove
+    );
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
 });
 
 effectList.addEventListener('change', onPreviewImageClick);
