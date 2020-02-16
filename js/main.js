@@ -92,10 +92,17 @@ var renderPhoto = function (block) {
       .querySelector('#picture')
       .content.querySelector('.picture');
   var pictureElement = pictureTemplate.cloneNode(true);
+
+  var onSmallImageClick = function (evt) {
+    evt.preventDefault();
+    showBigPicture(block);
+  };
+
   pictureElement.querySelector('.picture__img').src = block.url;
   pictureElement.querySelector('.picture__likes').textContent = block.likes;
   pictureElement.querySelector('.picture__comments').textContent =
-      block.comments.length;
+    block.comments.length;
+  pictureElement.addEventListener('click', onSmallImageClick);
   return pictureElement;
 };
 
@@ -128,6 +135,7 @@ var showBigPicture = function (image) {
   bigPicture.querySelector('.social__comment-count').classList.add('hidden');
   bigPicture.querySelector('.comments-loader').classList.add('hidden');
   document.body.classList.add('modal-open');
+  document.addEventListener('keydown', onBigPictureEscPress);
 };
 
 // создание коментария
@@ -151,4 +159,23 @@ var renderComments = function (comments) {
   listCommentsBigPicture.appendChild(fragment);
 };
 
-showBigPicture(blocksPhotos[0]);
+// закрытие большой картинки
+var bigPictureCancel = document.querySelector('.big-picture__cancel');
+var bigPictureOverlay = document.querySelector('.big-picture');
+var ESC_KEY = 'Escape';
+
+var onBigPictureEscPress = function (evt) {
+  if (evt.key === ESC_KEY) {
+    onBigPictureClosePress();
+  }
+};
+
+// функция закрытия редактирования картинки
+var onBigPictureClosePress = function () {
+  bigPictureOverlay.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onBigPictureEscPress);
+};
+
+bigPictureCancel.addEventListener('click', onBigPictureClosePress);
+
