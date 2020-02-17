@@ -166,16 +166,16 @@ var ESC_KEY = 'Escape';
 
 var onBigPictureEscPress = function (evt) {
   if (evt.key === ESC_KEY) {
-    onBigPictureClosePress();
+    closeBigPicture();
   }
 };
 
 // функция закрытия редактирования картинки
-var onBigPictureClosePress = function () {
+var closeBigPicture = function () {
   bigPictureOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onBigPictureEscPress);
 };
 
-bigPictureCancel.addEventListener('click', onBigPictureClosePress);
+bigPictureCancel.addEventListener('click', onBigPictureEscPress);
 

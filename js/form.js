@@ -19,16 +19,17 @@ var closePopup = function () {
   imgUploadOverlay.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
   uploadFile.value = '';
-};
-
-// функция закрытия формы при нажатии на крестик или ESC
-uploadCancel.addEventListener('click', function () {
-  closePopup();
   controlValue.setAttribute('value', '100%');
+  controlValue.value = '100%';
   imageUploadPreview.style.transform = '';
   imageUploadPreview.style.filter = '';
   imageUploadPreview.className = '';
   setDefaultEffects();
+};
+
+// функция закрытия формы при нажатии на крестик
+uploadCancel.addEventListener('click', function () {
+  closePopup();
 });
 
 // открытие формы на изменение картинки
