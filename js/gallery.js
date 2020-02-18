@@ -32,6 +32,6 @@
     picture.appendChild(fragment);
   };
 
-  var blocksPhotos = window.data.createDataForBlockPhoto(NUMBER_OF_PHOTOS);
+  var blocksPhotos = window.data.createForBlockPhoto(NUMBER_OF_PHOTOS);
   renderPhotos(blocksPhotos);
 })();

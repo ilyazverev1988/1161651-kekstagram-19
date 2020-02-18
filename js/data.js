@@ -85,6 +85,6 @@
   };
 
   window.data = {
-    createDataForBlockPhoto: createDataForBlockPhoto,
+    createForBlockPhoto: createDataForBlockPhoto,
   };
 })();
