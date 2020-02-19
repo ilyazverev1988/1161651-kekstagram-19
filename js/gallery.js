@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  var NUMBER_OF_PHOTOS = 25;
+
   var picture = document.querySelector('.pictures');
 
   // создание изображения
@@ -32,6 +32,15 @@
     picture.appendChild(fragment);
   };
 
-  var blocksPhotos = window.data.createForBlockPhoto(NUMBER_OF_PHOTOS);
-  renderPhotos(blocksPhotos);
+  var onSuccess = function (dataForGallery) {
+    renderPhotos(dataForGallery);
+  };
+
+  var onError = function (message) {
+    // заглушка
+    return message + 1;
+  };
+
+  window.server.load(onSuccess, onError);
+
 })();
