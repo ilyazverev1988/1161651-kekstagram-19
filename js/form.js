@@ -61,4 +61,58 @@
   window.validation.textComment.addEventListener('blur', function () {
     document.addEventListener('keydown', closePopup);
   });
+
+  // функция отправки формы
+  var form = document.querySelector('.img-upload__form');
+  form.addEventListener('submit', function (evt) {
+    window.server.upload(new FormData(form), onSuccess, onError);
+    evt.preventDefault();
+  });
+
+  // отрисовка в случае успешной выгрузки
+  var onSuccess = function () {
+    imgUploadOverlay.classList.add('hidden');
+    closePopup();
+
+    // вывод сообщения
+    var successTemplate = document
+      .querySelector('#success')
+      .content.querySelector('.success');
+    var success = successTemplate.cloneNode(true);
+    var successButton = document.querySelector('.success__button');
+
+    window.gallery.main.appendChild(success);
+
+    // закрытия сообщения
+    // по ESC
+    var onScreenEscPress = function (evt) {
+      if (evt.key === window.preview.ESC_KEY) {
+        window.gallery.main.removeChild(success);
+      }
+    };
+
+    var onSuccessMessageClick = function () {
+      window.gallery.main.removeChild(success);
+      document.removeEventListener('keydown', onScreenEscPress);
+      window.gallery.main.removeEventListener('click', onSuccessMessageClick);
+      successButton.removeEventListener('click', onSuccessMessageClick);
+    };
+
+    document.addEventListener('keydown', onScreenEscPress);
+    window.gallery.main.addEventListener('click', onSuccessMessageClick);
+    successButton.addEventListener('click', onSuccessMessageClick);
+  };
+
+  // отрисовка сообщения в случае ошибки
+  var onError = function () {
+    var errorTemplate = document
+      .querySelector('#error')
+      .content.querySelector('.error');
+    var error = errorTemplate.cloneNode(true);
+
+    // error.querySelector('.error__title').textContent = message;
+    // error.querySelector('.error__button').style.display = 'none';
+    window.gallery.main.appendChild(error);
+  };
+
 })();

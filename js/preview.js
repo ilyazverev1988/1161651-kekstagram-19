@@ -67,18 +67,19 @@
 
   var onBigPictureEscPress = function (evt) {
     if (evt.key === ESC_KEY) {
-      closeBigPicture();
+      bigPictureOverlay.classList.add('hidden');
+      document.body.classList.remove('modal-open');
     }
   };
 
   // функция закрытия редактирования картинки
-  var closeBigPicture = function () {
+  var onBigPictureClose = function () {
     bigPictureOverlay.classList.add('hidden');
     document.body.classList.remove('modal-open');
     document.removeEventListener('keydown', onBigPictureEscPress);
   };
 
-  bigPictureCancel.addEventListener('click', closeBigPicture);
+  bigPictureCancel.addEventListener('click', onBigPictureClose);
 
   window.preview = {
     showBigPicture: showBigPicture,
