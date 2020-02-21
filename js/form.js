@@ -61,4 +61,6 @@
   window.validation.textComment.addEventListener('blur', function () {
     document.addEventListener('keydown', closePopup);
   });
+
+
 })();
