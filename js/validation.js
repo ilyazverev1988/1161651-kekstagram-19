@@ -124,8 +124,14 @@
 
   textHashtag.addEventListener('input', onHashtagInput);
 
+  // функция очистки строки хоштэгов и комментариев
+  var setDefaultTagComment = function () {
+    textHashtag.value = '';
+    textComment.value = '';
+  };
 
   window.validation = {
-    textComment: textComment
+    textComment: textComment,
+    setDefaultTagComment: setDefaultTagComment
   };
 })();
