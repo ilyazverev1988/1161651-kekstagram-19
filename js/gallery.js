@@ -35,8 +35,64 @@
   };
 
   // отрисовка данных в случае успешной загрузки
-  var onSuccess = function (dataForGallery) {
-    renderPhotos(dataForGallery);
+  var onSuccess = function (data) {
+    var imgFilters = document.querySelector('.img-filters');
+    imgFilters.classList.remove('img-filters--inactive');
+    var filterDefault = document.querySelector('#filter-default');
+    var filterRandom = document.querySelector('#filter-random');
+    var filterDiscussed = document.querySelector('#filter-discussed');
+    var filterFormsButton = document.querySelectorAll('.img-filters__form button');
+
+    var dataForGallery = data.slice();
+
+    renderPhotos(data);
+
+    // функция удаления всех отрисованных картинок
+    var deletePictures = function () {
+      var pictureImg = document.querySelectorAll('.picture');
+      pictureImg.forEach(function (item) {
+        picture.removeChild(item);
+      });
+    };
+
+    // функция удаления класса
+    var deleteClass = function () {
+      filterFormsButton.forEach(function (button) {
+        button.classList.remove('img-filters__button--active');
+      });
+    };
+
+    var render = function () {
+      renderPhotos(data);
+    };
+
+    var renderRandom = function () {
+      window.filter.getRandomDataForPictures(data);
+    };
+
+    // отрисовка всего по клику по умолчвнию
+    filterDefault.addEventListener('click', function () {
+      deleteClass();
+      filterDefault.classList.add('img-filters__button--active');
+      deletePictures();
+      window.utils.debounce(render);
+    });
+
+    // отрисовка по клику случайные 10 картинок
+    filterRandom.addEventListener('click', function () {
+      deleteClass();
+      filterRandom.classList.add('img-filters__button--active');
+      deletePictures();
+      window.utils.debounce(renderRandom);
+    });
+
+    // отрисовка по клику самые комментируемые
+    filterDiscussed.addEventListener('click', function () {
+      deleteClass();
+      filterDiscussed.classList.add('img-filters__button--active');
+      deletePictures();
+      window.utils.debounce(window.filter.sortMostCommented(dataForGallery));
+    });
   };
 
   // в случае ошибки загрузки вывод сообщения об ошибке
@@ -78,5 +134,6 @@
 
   window.gallery = {
     main: main,
+    renderPhotos: renderPhotos
   };
 })();
