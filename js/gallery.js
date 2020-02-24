@@ -34,6 +34,10 @@
     picture.appendChild(fragment);
   };
 
+  var debounceRenderPhotos = window.utils.debounce(function (data) {
+    renderPhotos(data);
+  });
+
   // отрисовка данных в случае успешной загрузки
   var onSuccess = function (data) {
     var imgFilters = document.querySelector('.img-filters');
@@ -62,36 +66,28 @@
       });
     };
 
-    var render = function () {
-      renderPhotos(data);
-    };
-
-    var renderRandom = function () {
-      window.filter.getRandomDataForPictures(data);
+    var renderDataFilter = function (dataForPhoto) {
+      deleteClass();
+      deletePictures();
+      debounceRenderPhotos(dataForPhoto);
     };
 
     // отрисовка всего по клику по умолчвнию
-    filterDefault.addEventListener('click', function () {
-      deleteClass();
-      filterDefault.classList.add('img-filters__button--active');
-      deletePictures();
-      window.utils.debounce(render);
+    filterDefault.addEventListener('click', function (evt) {
+      renderDataFilter(data);
+      evt.target.classList.add('img-filters__button--active');
     });
 
     // отрисовка по клику случайные 10 картинок
-    filterRandom.addEventListener('click', function () {
-      deleteClass();
-      filterRandom.classList.add('img-filters__button--active');
-      deletePictures();
-      window.utils.debounce(renderRandom);
+    filterRandom.addEventListener('click', function (evt) {
+      renderDataFilter(window.filter.getRandomDataForPictures(data));
+      evt.target.classList.add('img-filters__button--active');
     });
 
     // отрисовка по клику самые комментируемые
-    filterDiscussed.addEventListener('click', function () {
-      deleteClass();
-      filterDiscussed.classList.add('img-filters__button--active');
-      deletePictures();
-      window.utils.debounce(window.filter.sortMostCommented(dataForGallery));
+    filterDiscussed.addEventListener('click', function (evt) {
+      renderDataFilter(window.filter.sortMostCommented(dataForGallery));
+      evt.target.classList.add('img-filters__button--active');
     });
   };
 

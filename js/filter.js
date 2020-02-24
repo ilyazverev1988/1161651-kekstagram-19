@@ -11,23 +11,15 @@
       }
       return dataRandom;
     };
-    window.gallery.renderPhotos(
-        dataRandomForRender(randomDataForPictures, 10)
-    );
+    return dataRandomForRender(randomDataForPictures, 10);
   };
 
   // сортировка массива по самому коментируеммому
   var sortMostCommented = function (array) {
     array.sort(function (first, second) {
-      if (first.comments.length > second.comments.length) {
-        return -1;
-      } else if (first.comments.length < second.comments.length) {
-        return 1;
-      } else {
-        return 0;
-      }
+      return first.comments.length > second.comments.length ? -1 : 1;
     });
-    window.gallery.renderPhotos(array);
+    return array;
   };
 
   window.filter = {
