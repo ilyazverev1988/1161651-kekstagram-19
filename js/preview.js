@@ -5,29 +5,33 @@
 
   // показывает большую картинку
   var showBigPicture = function (image) {
-    var imgBigPicture = bigPicture.querySelector(
-        '.big-picture__img img'
-    );
+    var imgBigPicture = bigPicture.querySelector('.big-picture__img img');
     var likesBigPicture = bigPicture.querySelector('.likes-count');
-    var quantityCommentsBigPicture = bigPicture.querySelector(
-        '.comments-count'
-    );
-    var descriptionBigPicture = bigPicture.querySelector(
-        '.social__caption'
-    );
+    var quantityCommentsBigPicture = bigPicture.querySelector('.comments-count');
+    var descriptionBigPicture = bigPicture.querySelector('.social__caption');
+    var socialCommentsLoader = bigPicture.querySelector('.social__comments-loader');
+    var CLICK_ON_LOAD = 1;
 
     bigPicture.classList.remove('hidden');
     imgBigPicture.src = image.url;
     likesBigPicture.textContent = image.likes;
     quantityCommentsBigPicture.textContent = image.comments.length;
     descriptionBigPicture.textContent = image.description;
-    renderComments(image.comments);
-    bigPicture
-                   .querySelector('.social__comment-count')
-                   .classList.add('hidden');
-    bigPicture
-                   .querySelector('.comments-loader')
-                   .classList.add('hidden');
+    var commentsArray = image.comments;
+
+    // рендер комментариев по умолчанию 5 штук
+    renderComments(commentsArray.slice(0, 5));
+
+    // появление по клику оставшихся комментариев по 5 штук
+    socialCommentsLoader.addEventListener('click', function () {
+      CLICK_ON_LOAD++;
+      var newArray = commentsArray.slice(0, 5 * CLICK_ON_LOAD);
+      renderComments(newArray);
+    });
+
+    bigPicture.querySelector('.social__comment-count').classList.add('hidden');
+    bigPicture.querySelector('.comments-loader').classList.add('hidden');
+    socialCommentsLoader.classList.remove('hidden');
     document.body.classList.add('modal-open');
     document.addEventListener('keydown', onBigPictureEscPress);
   };
