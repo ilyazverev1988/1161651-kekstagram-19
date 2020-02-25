@@ -20,6 +20,7 @@
     }
   };
 
+  // установка дефолтных значений по умолчанию
   var setDefaultValueForm = function () {
     uploadFile.value = '';
     window.size.controlValue.setAttribute('value', '100%');

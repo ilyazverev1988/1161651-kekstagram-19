@@ -34,9 +34,7 @@
     picture.appendChild(fragment);
   };
 
-  var debounceRenderPhotos = window.utils.debounce(function (data) {
-    renderPhotos(data);
-  });
+  var debounceRenderPhotos = window.utils.debounce(renderPhotos);
 
   // отрисовка данных в случае успешной загрузки
   var onSuccess = function (data) {

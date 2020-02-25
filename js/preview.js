@@ -10,19 +10,25 @@
     var quantityCommentsBigPicture = bigPicture.querySelector('.comments-count');
     var descriptionBigPicture = bigPicture.querySelector('.social__caption');
     var socialCommentsLoader = bigPicture.querySelector('.social__comments-loader');
+    var CLICK_ON_LOAD = 1;
 
     bigPicture.classList.remove('hidden');
     imgBigPicture.src = image.url;
     likesBigPicture.textContent = image.likes;
     quantityCommentsBigPicture.textContent = image.comments.length;
     descriptionBigPicture.textContent = image.description;
-    /* var commentsArray = image.comments;
-    var newArray = [];
-    for (var i = 0; i < commentsArray.length; i++) {
-      newArray.push(commentsArray.slice(i, i + 5));
-    }
-    console.log(newArray);*/
-    renderComments(image.comments);
+    var commentsArray = image.comments;
+
+    // рендер комментариев по умолчанию 5 штук
+    renderComments(commentsArray.slice(0, 5));
+
+    // появление по клику оставшихся комментариев по 5 штук
+    socialCommentsLoader.addEventListener('click', function () {
+      CLICK_ON_LOAD++;
+      var newArray = commentsArray.slice(0, 5 * CLICK_ON_LOAD);
+      renderComments(newArray);
+    });
+
     bigPicture.querySelector('.social__comment-count').classList.add('hidden');
     bigPicture.querySelector('.comments-loader').classList.add('hidden');
     socialCommentsLoader.classList.remove('hidden');
