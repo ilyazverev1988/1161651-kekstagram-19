@@ -19,7 +19,7 @@
     descriptionBigPicture.textContent = image.description;
     var commentsArray = image.comments;
 
-    // рендер комментариев по умолчанию 5 штук
+    // рендер комментариев по умолчанию по 5 штук
     renderComments(commentsArray.slice(0, 5));
 
     // появление по клику оставшихся комментариев по 5 штук
