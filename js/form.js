@@ -16,6 +16,7 @@
     if (evt.key === window.preview.ESC_KEY) {
       imgUploadOverlay.classList.add('hidden');
       document.removeEventListener('keydown', onPopupEscPress);
+      document.querySelector('#effect-none').checked = 'true';
       setDefaultValueForm();
     }
   };
@@ -28,6 +29,7 @@
     imageUploadPreview.style.transform = '';
     imageUploadPreview.style.filter = '';
     imageUploadPreview.className = '';
+    document.querySelector('#effect-none').checked = 'true';
     window.validation.setDefaultTagComment();
     window.effect.setDefaultEffects();
   };

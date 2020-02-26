@@ -10,30 +10,37 @@
     var quantityCommentsBigPicture = bigPicture.querySelector('.comments-count');
     var descriptionBigPicture = bigPicture.querySelector('.social__caption');
     var socialCommentsLoader = bigPicture.querySelector('.social__comments-loader');
-    var CLICK_ON_LOAD = 1;
+    var clickOnLoad = 1;
 
-    bigPicture.classList.remove('hidden');
     imgBigPicture.src = image.url;
     likesBigPicture.textContent = image.likes;
     quantityCommentsBigPicture.textContent = image.comments.length;
     descriptionBigPicture.textContent = image.description;
-    var commentsArray = image.comments;
 
-    // рендер комментариев по умолчанию по 5 штук
-    renderComments(commentsArray.slice(0, 5));
-
-    // появление по клику оставшихся комментариев по 5 штук
-    socialCommentsLoader.addEventListener('click', function () {
-      CLICK_ON_LOAD++;
-      var newArray = commentsArray.slice(0, 5 * CLICK_ON_LOAD);
-      renderComments(newArray);
-    });
-
+    bigPicture.classList.remove('hidden');
     bigPicture.querySelector('.social__comment-count').classList.add('hidden');
     bigPicture.querySelector('.comments-loader').classList.add('hidden');
     socialCommentsLoader.classList.remove('hidden');
     document.body.classList.add('modal-open');
     document.addEventListener('keydown', onBigPictureEscPress);
+    var commentsForImage = image.comments;
+
+    if (commentsForImage.length < 5) {
+      // рендер комментариев по умолчанию по 5 штук
+      renderComments(commentsForImage);
+      socialCommentsLoader.classList.add('hidden');
+    } else { // рендер остальных комментариев по клику на загрузить еще
+      renderComments(commentsForImage.slice(0, 5));
+      socialCommentsLoader.addEventListener('click', function () {
+        clickOnLoad++;
+        var commentsForLoad = commentsForImage.slice(0, 5 * clickOnLoad);
+        renderComments(commentsForLoad);
+        socialCommentsLoader.classList.remove('hidden');
+        if (commentsForLoad.length >= commentsForImage.length) {
+          socialCommentsLoader.classList.add('hidden');
+        }
+      });
+    }
   };
 
   // создание коментария
