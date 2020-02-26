@@ -44,11 +44,22 @@
   // функция закрытия формы при нажатии на крестик
   uploadCancel.addEventListener('click', onPopupClose);
 
-  // открытие формы на изменение картинки
+  // открытие формы на изменение картинки и загрузка картинки на выбор
   uploadFile.addEventListener('change', function () {
+    var reader = new FileReader();
+    var file = uploadFile.files[0];
+    var imgOfUploadOverlay = document.querySelector('.img-upload__overlay img');
+    var spanEffectsPreview = document.querySelectorAll('.effects__preview');
     document.addEventListener('keydown', onPopupEscPress);
     window.effect.slider.classList.add('hidden');
     imgUploadOverlay.classList.remove('hidden');
+    reader.addEventListener('load', function () {
+      imgOfUploadOverlay.src = reader.result;
+      spanEffectsPreview.forEach(function (span) {
+        span.style.backgroundImage = 'url(' + reader.result + ')';
+      });
+    });
+    reader.readAsDataURL(file);
   });
 
   // не закрывает окно редактирование картинки, когда в фокусе строка тега
